@@ -77,6 +77,60 @@ function TodoList() {
     [doneList]
   );
 
+  const moveToDone = useCallback(
+    (id) => () => {
+      const index = todoList.findIndex((todoInfo) => todoInfo.id === id);
+      const newTodoList = [...todoList];
+      newTodoList[index].isChecked = newTodoList[index].isChecked
+        ? false
+        : true;
+      setTodoList(newTodoList);
+    },
+    [todoList]
+  );
+
+  const moveToTodo = useCallback(
+    (id) => () => {
+      const index = doneList.findIndex((doneInfo) => doneInfo.id === id);
+      const newDoneList = [...doneList];
+      newDoneList[index].isChecked = newDoneList[index].isChecked
+        ? false
+        : true;
+      setDoneList(newDoneList);
+    },
+    [doneList]
+  );
+
+  const moveDoneList = useCallback(
+    (id) => {
+      const index = todoList.findIndex((todoInfo) => todoInfo.id === id);
+      const newDoneList = [...doneList];
+      newDoneList.push(todoList[index]);
+      setDoneList(newDoneList);
+      setDoneId((newDoneId) => newDoneId + 1);
+
+      const newTodoList = todoList.filter((todoInfo) => todoInfo.id !== id);
+      setTodoList(newTodoList);
+      setTodoId((newTodoId) => newTodoId - 1);
+    },
+    [doneList, todoList]
+  );
+
+  const moveTodoList = useCallback(
+    (id) => {
+      const index = doneList.findIndex((doneInfo) => doneInfo.id === id);
+      const newTodoList = [...todoList];
+      newTodoList.push(doneList[index]);
+      setTodoList(newTodoList);
+      setTodoId((newTodoId) => newTodoId + 1);
+
+      const newDoneList = doneList.filter((doneInfo) => doneInfo.id !== id);
+      setDoneList(newDoneList);
+      setDoneId((newDoneId) => newDoneId - 1);
+    },
+    [todoList, doneList]
+  );
+
   return (
     <div className="container">
       <h1 className="title">Things to do</h1>
@@ -86,7 +140,19 @@ function TodoList() {
         <p className="subTitle">📒to do</p>
         <p className="todoCount">items: {todoId}</p>
         <ul type="none" id="todoList">
-          <TodoText />
+          {todoList.map((todoInfo) => {
+            return (
+              <TodoText
+                key={todoInfo.id}
+                id={todoInfo.id}
+                todo={todoInfo.todo}
+                isChecked={todoInfo.isChecked}
+                deleteTodo={deleteTodo}
+                move={moveToDone}
+                moveList={moveDoneList}
+              />
+            );
+          })}
         </ul>
       </div>
       <hr />
@@ -94,7 +160,19 @@ function TodoList() {
         <p className="subTitle">📂done</p>
         <p className="doneCount">items: {doneId}</p>
         <ul type="none" id="doneList">
-          <TodoText />
+          {doneList.map((doneInfo) => {
+            return (
+              <TodoText
+                key={doneInfo.id}
+                id={doneInfo.id}
+                todo={doneInfo.todo}
+                isChecked={doneInfo.isChecked}
+                deleteTodo={deleteDone}
+                move={moveToTodo}
+                moveList={moveTodoList}
+              />
+            );
+          })}
         </ul>
       </div>
     </div>
