@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import AddForm from './AddForm';
 import TodoText from './TodoText';
 import './style.css';
@@ -43,6 +43,21 @@ function TodoList() {
 
     isMount.current = false;
   }, []);
+
+  const addTodo = useCallback(
+    (todo) => () => {
+      if (todo.trim() === '') {
+        alert('No items!');
+      } else if (todo) {
+        setTodoList((prevTodoList) => [
+          ...prevTodoList,
+          { id: todoId, todo: todo, isChecked: false },
+        ]);
+        setTodoId((prevId) => prevId + 1);
+      }
+    },
+    [todoId]
+  );
 
   return (
     <div className="container">
