@@ -59,6 +59,24 @@ function TodoList() {
     [todoId]
   );
 
+  const deleteTodo = useCallback(
+    (id) => () => {
+      const newTodoList = todoList.filter((todoInfo) => todoInfo.id !== id);
+      setTodoList(newTodoList);
+      setTodoId((newTodoId) => newTodoId - 1);
+    },
+    [todoList]
+  );
+
+  const deleteDone = useCallback(
+    (id) => () => {
+      const newDoneList = doneList.filter((doneInfo) => doneInfo.id !== id);
+      setDoneList(newDoneList);
+      setDoneId((newDoneId) => newDoneId - 1);
+    },
+    [doneList]
+  );
+
   return (
     <div className="container">
       <h1 className="title">Things to do</h1>
