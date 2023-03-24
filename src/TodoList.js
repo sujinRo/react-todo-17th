@@ -1,7 +1,72 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import AddForm from './AddForm';
 import TodoText from './TodoText';
-import './style.css';
+import styled from 'styled-components';
+
+const All = styled.body`
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Container = styled.div`
+  display: flex; /*수직으로 쌓임*/
+  flex-direction: column;
+  width: 23vw;
+  height: 43vw;
+  border-radius: 2vw;
+  box-shadow: 0.4vw 0.4vw 0.4vw 0.4vw rgb(193, 193, 193);
+  min-width: 100px;
+  min-height: 200px;
+`;
+
+const Title = styled.h1`
+  color: rgb(255, 182, 93);
+  font-size: 1.8vw;
+  font-weight: bold;
+  margin-left: 1vw;
+  margin-top: 1.5vw;
+  margin-bottom: 0;
+`;
+
+const SectionLine = styled.hr`
+  width: 100%;
+  border: thin solid rgb(230, 230, 230);
+`;
+
+const SubTitle = styled.p`
+  color: rgb(255, 182, 93);
+  font-size: 1.5vw;
+  margin-left: 1vw;
+  margin-bottom: 0;
+  margin-top: 0;
+`;
+
+const SectionName = styled.div`
+  height: 35vh;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    background: transparent;
+    width: 0;
+  }
+`;
+
+const List = styled.ul`
+  font-size: 1vw;
+  cursor: pointer;
+`;
+
+const SectionCount = styled.p`
+  font-size: 1vw;
+  color: rgb(255, 182, 93);
+  display: flex;
+  justify-content: end;
+  margin-right: 1vw;
+`;
 
 function TodoList() {
   const [todoList, setTodoList] = useState([]);
@@ -132,50 +197,52 @@ function TodoList() {
   );
 
   return (
-    <div className="container">
-      <h1 className="title">Things to do</h1>
-      <AddForm addTodo={addTodo} />
-      <hr />
-      <div className="todo">
-        <p className="subTitle">📒to do</p>
-        <p className="todoCount">items: {todoId}</p>
-        <ul type="none" id="todoList">
-          {todoList.map((todoInfo) => {
-            return (
-              <TodoText
-                key={todoInfo.id}
-                id={todoInfo.id}
-                todo={todoInfo.todo}
-                isChecked={todoInfo.isChecked}
-                deleteTodo={deleteTodo}
-                move={moveToDone}
-                moveList={moveDoneList}
-              />
-            );
-          })}
-        </ul>
-      </div>
-      <hr />
-      <div className="done">
-        <p className="subTitle">📂done</p>
-        <p className="doneCount">items: {doneId}</p>
-        <ul type="none" id="doneList">
-          {doneList.map((doneInfo) => {
-            return (
-              <TodoText
-                key={doneInfo.id}
-                id={doneInfo.id}
-                todo={doneInfo.todo}
-                isChecked={doneInfo.isChecked}
-                deleteTodo={deleteDone}
-                move={moveToTodo}
-                moveList={moveTodoList}
-              />
-            );
-          })}
-        </ul>
-      </div>
-    </div>
+    <All>
+      <Container>
+        <Title>Things to do</Title>
+        <AddForm addTodo={addTodo} />
+        <SectionLine />
+        <SectionName>
+          <SubTitle>📒to do</SubTitle>
+          <SectionCount>items: {todoId}</SectionCount>
+          <List type="none">
+            {todoList.map((todoInfo) => {
+              return (
+                <TodoText
+                  key={todoInfo.id}
+                  id={todoInfo.id}
+                  todo={todoInfo.todo}
+                  isChecked={todoInfo.isChecked}
+                  deleteTodo={deleteTodo}
+                  move={moveToDone}
+                  moveList={moveDoneList}
+                />
+              );
+            })}
+          </List>
+        </SectionName>
+        <SectionLine />
+        <SectionName>
+          <SubTitle>📂done</SubTitle>
+          <SectionCount>items: {doneId}</SectionCount>
+          <List type="none">
+            {doneList.map((doneInfo) => {
+              return (
+                <TodoText
+                  key={doneInfo.id}
+                  id={doneInfo.id}
+                  todo={doneInfo.todo}
+                  isChecked={doneInfo.isChecked}
+                  deleteTodo={deleteDone}
+                  move={moveToTodo}
+                  moveList={moveTodoList}
+                />
+              );
+            })}
+          </List>
+        </SectionName>
+      </Container>
+    </All>
   );
 }
 
