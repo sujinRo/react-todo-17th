@@ -38,6 +38,7 @@ function AddForm({ addTodo }) {
   const input = useRef(null);
 
   useEffect(() => {
+    input.current.focus();
     setValue('');
   }, [addTodo]);
 

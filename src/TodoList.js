@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import AddForm from './AddForm';
 import TodoText from './TodoText';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
-const All = styled.body`
+const All = styled.div`
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
   height: 100vh;
@@ -209,7 +210,7 @@ function TodoList() {
             {todoList.map((todoInfo) => {
               return (
                 <TodoText
-                  key={todoInfo.id}
+                  key={uuidv4()}
                   id={todoInfo.id}
                   todo={todoInfo.todo}
                   isChecked={todoInfo.isChecked}
@@ -229,7 +230,7 @@ function TodoList() {
             {doneList.map((doneInfo) => {
               return (
                 <TodoText
-                  key={doneInfo.id}
+                  key={uuidv4()}
                   id={doneInfo.id}
                   todo={doneInfo.todo}
                   isChecked={doneInfo.isChecked}
