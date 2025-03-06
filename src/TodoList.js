@@ -86,7 +86,7 @@ function TodoList() {
       localStorage.setItem('doneId', doneId);
       console.log('done');
     }
-  }, [todoList, todoId, doneList, doneId]);
+  }, [todoList, doneList]);
 
   useEffect(() => {
     const localTodoList = localStorage.getItem('todoList');
