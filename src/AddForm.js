@@ -6,16 +6,18 @@ const FormInput = styled.form`
   height: 8vh;
   align-items: center; /*교차축 정렬*/
   justify-content: center; /*주축 정렬*/
+  gap: 5px;
 `;
 
 const InputText = styled.input`
-  border-radius: 0.8vw;
+  border-radius: 20px;
   border: none;
-  width: 75%;
-  height: 2vw;
+  width: 250px;
+  height: 8px;
   background-color: rgb(255, 225, 170);
-  font-size: 1vw;
+  font-size: 0.9rem;
   outline: none;
+  padding: 10px;
   &::placeholder {
     color: rgb(255, 236, 200);
   }
@@ -24,13 +26,12 @@ const InputText = styled.input`
 const AddBtn = styled.button`
   border-radius: 100%;
   border: none;
-  width: 2vw;
-  height: 2vw;
+  width: 28px;
+  height: 28px;
   background-color: rgb(255, 225, 170);
-  font-size: 1vw;
+  font-size: 1rem;
   color: rgb(255, 182, 93);
   cursor: pointer;
-  margin-left: 0.5vw;
 `;
 
 function AddForm({ addTodo }) {

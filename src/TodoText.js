@@ -2,14 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 
 const List = styled.li`
-  margin-bottom: 0.3vw;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+`;
+
+const Item = styled.span`
+  cursor: pointer;
+  word-break: break-all;
 `;
 
 const DeleteBtn = styled.button`
   border: none;
   background-color: transparent;
-  font-size: 1vw;
   cursor: pointer;
+  padding: 0;
 `;
 
 function TodoText({ id, todo, isChecked, deleteTodo, move, moveList }) {
@@ -22,7 +31,7 @@ function TodoText({ id, todo, isChecked, deleteTodo, move, moveList }) {
 
   return (
     <List>
-      <span onClick={clickMove}>{todo}</span>
+      <Item onClick={clickMove}>{todo}</Item>
       <DeleteBtn onClick={deleteTodo(id)}>❎</DeleteBtn>
     </List>
   );

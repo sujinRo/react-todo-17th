@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 const All = styled.div`
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
-  height: 100vh;
-  margin: 0;
+  height: 100%;
+  margin: 50px 0 0 0;
   padding: 0;
   justify-content: center;
   align-items: center;
@@ -17,56 +17,56 @@ const All = styled.div`
 const Container = styled.div`
   display: flex; /*수직으로 쌓임*/
   flex-direction: column;
-  width: 23vw;
-  height: 43vw;
-  border-radius: 2vw;
-  box-shadow: 0.4vw 0.4vw 0.4vw 0.4vw rgb(193, 193, 193);
-  min-width: 100px;
-  min-height: 200px;
+  width: 350px;
+  height: 550px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px 5px rgb(193, 193, 193);
 `;
 
 const Title = styled.h1`
   color: rgb(255, 182, 93);
-  font-size: 1.8vw;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-left: 1vw;
-  margin-top: 1.5vw;
-  margin-bottom: 0;
+  margin: 10px 0 0 10px;
 `;
 
 const SectionLine = styled.hr`
   width: 100%;
-  border: thin solid rgb(230, 230, 230);
+  height: 2px;
+  background-color: rgb(230, 230, 230);
+  border: none;
 `;
 
 const SubTitle = styled.p`
   color: rgb(255, 182, 93);
-  font-size: 1.5vw;
-  margin-left: 1vw;
+  font-size: 1.3rem;
   margin-bottom: 0;
   margin-top: 0;
-`;
-
-const SectionName = styled.div`
-  height: 35vh;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    background: transparent;
-    width: 0;
   }
 `;
 
+const SectionName = styled.div`
+  height: 200px;
+  margin: 0 7px;
+`;
+
 const List = styled.ul`
-  font-size: 1vw;
-  cursor: pointer;
+  padding: 0 13px;
+  height: 130px;
+  font-size: 0.8rem;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    background: light-gray;
+    width: 2px;
+    height: 100%;
+  }
 `;
 
 const SectionCount = styled.p`
-  font-size: 1vw;
+  font-size: 0.8rem;
   color: rgb(255, 182, 93);
   display: flex;
   justify-content: end;
-  margin-right: 1vw;
 `;
 
 function TodoList() {
@@ -206,7 +206,7 @@ function TodoList() {
         <SectionName>
           <SubTitle>📒to do</SubTitle>
           <SectionCount>items: {todoId}</SectionCount>
-          <List type="none">
+          <List>
             {todoList.map((todoInfo) => {
               return (
                 <TodoText
@@ -226,7 +226,7 @@ function TodoList() {
         <SectionName>
           <SubTitle>📂done</SubTitle>
           <SectionCount>items: {doneId}</SectionCount>
-          <List type="none">
+          <List>
             {doneList.map((doneInfo) => {
               return (
                 <TodoText
