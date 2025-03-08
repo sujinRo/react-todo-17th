@@ -28,7 +28,7 @@ const AddBtn = styled.button`
   border: none;
   width: 28px;
   height: 28px;
-  display: flex:
+  display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgb(255, 225, 170);
