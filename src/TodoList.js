@@ -79,6 +79,7 @@ function TodoList() {
       localStorage.setItem('todoList', JSON.stringify(todoList));
       localStorage.setItem('todoId', todoId);
       localStorage.setItem('todoCount', todoCount);
+      localStorage.setItem('doneCount', doneCount);
     }
   }, [todoList]);
 
