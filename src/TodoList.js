@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import AddForm from './AddForm';
 import TodoText from './TodoText';
 import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 const All = styled.div`
   font-family: Arial, Helvetica, sans-serif;
@@ -56,9 +55,8 @@ const List = styled.ul`
   font-size: 0.8rem;
   overflow: auto;
   &::-webkit-scrollbar {
-    background: light-gray;
-    width: 2px;
-    height: 100%;
+    background: transparent;
+    width: 0;
   }
 `;
 
@@ -70,23 +68,19 @@ const SectionCount = styled.p`
 `;
 
 function TodoList() {
+  const [todoCount, setTodoCount] = useState(0);
+  const [doneCount, setDoneCount] = useState(0);
   const [todoList, setTodoList] = useState([]);
-  const [todoId, setTodoId] = useState(0);
-  const [doneList, setDoneList] = useState([]);
-  const [doneId, setDoneId] = useState(0);
+  const [todoId, setTodoId] = useState(Date);
   const isMount = useRef(true);
 
   useEffect(() => {
     if (!isMount.current) {
       localStorage.setItem('todoList', JSON.stringify(todoList));
       localStorage.setItem('todoId', todoId);
-      console.log('todo');
-
-      localStorage.setItem('doneList', JSON.stringify(doneList));
-      localStorage.setItem('doneId', doneId);
-      console.log('done');
+      localStorage.setItem('todoCount', todoCount);
     }
-  }, [todoList, doneList]);
+  }, [todoList]);
 
   useEffect(() => {
     const localTodoList = localStorage.getItem('todoList');
@@ -95,22 +89,21 @@ function TodoList() {
     }
     const localTodoId = localStorage.getItem('todoId');
     if (localTodoId) {
-      setTodoId(parseInt(localTodoId));
+      setTodoId(localTodoId);
     }
-
-    const localDoneList = localStorage.getItem('doneList');
-    if (localDoneList) {
-      setDoneList(JSON.parse(localDoneList));
+    const localTodoCount = localStorage.getItem('todoCount');
+    if (localTodoCount) {
+      setTodoCount(parseInt(localTodoCount));
     }
-    const localDoneId = localStorage.getItem('doneId');
-    if (localDoneId) {
-      setDoneId(parseInt(localDoneId));
+    const localDoneCount = localStorage.getItem('doneCount');
+    if (localDoneCount) {
+      setDoneCount(parseInt(localDoneCount));
     }
 
     isMount.current = false;
   }, []);
 
-  const addTodo = useCallback(
+  const handleAddBtnClick = useCallback(
     (todo) => () => {
       if (todo.trim() === '') {
         alert('No items!');
@@ -119,127 +112,95 @@ function TodoList() {
           ...prevTodoList,
           { id: todoId, todo: todo, isChecked: false },
         ]);
-        setTodoId((prevId) => prevId + 1);
+        setTodoId(Date.now());
+        setTodoCount((previous) => previous + 1);
       }
     },
     [todoId]
   );
 
-  const deleteTodo = useCallback(
+  const handleDeleteBtnClick = useCallback(
     (id) => () => {
+      const index = todoList.findIndex((todoInfo) => todoInfo.id === id);
+      const isDone = todoList[index].isChecked;
+
       const newTodoList = todoList.filter((todoInfo) => todoInfo.id !== id);
       setTodoList(newTodoList);
-      setTodoId((newTodoId) => newTodoId - 1);
+
+      if (isDone) {
+        setDoneCount((previous) => previous - 1);
+      } else {
+        setTodoCount((previous) => previous - 1);
+      }
     },
     [todoList]
   );
 
-  const deleteDone = useCallback(
-    (id) => () => {
-      const newDoneList = doneList.filter((doneInfo) => doneInfo.id !== id);
-      setDoneList(newDoneList);
-      setDoneId((newDoneId) => newDoneId - 1);
-    },
-    [doneList]
-  );
-
-  const moveToDone = useCallback(
+  const handleItemClick = useCallback(
     (id) => () => {
       const index = todoList.findIndex((todoInfo) => todoInfo.id === id);
+      const isDone = todoList[index].isChecked;
+
       const newTodoList = [...todoList];
-      newTodoList[index].isChecked = newTodoList[index].isChecked
-        ? false
-        : true;
+      newTodoList[index].isChecked = !newTodoList[index].isChecked;
       setTodoList(newTodoList);
+
+      if (isDone) {
+        setTodoCount((previous) => previous + 1);
+        setDoneCount((previous) => previous - 1);
+      } else {
+        setTodoCount((previous) => previous - 1);
+        setDoneCount((previous) => previous + 1);
+      }
     },
     [todoList]
-  );
-
-  const moveToTodo = useCallback(
-    (id) => () => {
-      const index = doneList.findIndex((doneInfo) => doneInfo.id === id);
-      const newDoneList = [...doneList];
-      newDoneList[index].isChecked = newDoneList[index].isChecked
-        ? false
-        : true;
-      setDoneList(newDoneList);
-    },
-    [doneList]
-  );
-
-  const moveDoneList = useCallback(
-    (id) => {
-      const index = todoList.findIndex((todoInfo) => todoInfo.id === id);
-      const newDoneList = [...doneList];
-      newDoneList.push(todoList[index]);
-      setDoneList(newDoneList);
-      setDoneId((newDoneId) => newDoneId + 1);
-
-      const newTodoList = todoList.filter((todoInfo) => todoInfo.id !== id);
-      setTodoList(newTodoList);
-      setTodoId((newTodoId) => newTodoId - 1);
-    },
-    [doneList, todoList]
-  );
-
-  const moveTodoList = useCallback(
-    (id) => {
-      const index = doneList.findIndex((doneInfo) => doneInfo.id === id);
-      const newTodoList = [...todoList];
-      newTodoList.push(doneList[index]);
-      setTodoList(newTodoList);
-      setTodoId((newTodoId) => newTodoId + 1);
-
-      const newDoneList = doneList.filter((doneInfo) => doneInfo.id !== id);
-      setDoneList(newDoneList);
-      setDoneId((newDoneId) => newDoneId - 1);
-    },
-    [todoList, doneList]
   );
 
   return (
     <All>
       <Container>
         <Title>Things to do</Title>
-        <AddForm addTodo={addTodo} />
+        <AddForm addTodo={handleAddBtnClick} />
         <SectionLine />
         <SectionName>
           <SubTitle>📒to do</SubTitle>
-          <SectionCount>items: {todoId}</SectionCount>
+          <SectionCount>items: {todoCount}</SectionCount>
           <List>
-            {todoList.map((todoInfo) => {
-              return (
-                <TodoText
-                  key={uuidv4()}
-                  id={todoInfo.id}
-                  todo={todoInfo.todo}
-                  isChecked={todoInfo.isChecked}
-                  deleteTodo={deleteTodo}
-                  move={moveToDone}
-                  moveList={moveDoneList}
-                />
-              );
-            })}
+            {todoList
+              .filter((todo) => todo.isChecked == false)
+              .map((todoInfo) => {
+                return (
+                  <TodoText
+                    key={todoInfo.id}
+                    id={todoInfo.id}
+                    todo={todoInfo.todo}
+                    isChecked={todoInfo.isChecked}
+                    deleteTodo={handleDeleteBtnClick}
+                    move={handleItemClick}
+                  />
+                );
+              })}
           </List>
         </SectionName>
         <SectionLine />
         <SectionName>
           <SubTitle>📂done</SubTitle>
-          <SectionCount>items: {doneId}</SectionCount>
+          <SectionCount>items: {doneCount}</SectionCount>
           <List>
-            {doneList.map((doneInfo) => {
-              return (
-                <TodoText
-                  key={uuidv4()}
-                  id={doneInfo.id}
-                  todo={doneInfo.todo}
-                  isChecked={doneInfo.isChecked}
-                  deleteTodo={deleteDone}
-                  move={moveToTodo}
-                  moveList={moveTodoList}
-                />
-              );
-            })}
+            {todoList
+              .filter((todo) => todo.isChecked == true)
+              .map((doneInfo) => {
+                return (
+                  <TodoText
+                    key={doneInfo.id}
+                    id={doneInfo.id}
+                    todo={doneInfo.todo}
+                    isChecked={doneInfo.isChecked}
+                    deleteTodo={handleDeleteBtnClick}
+                    move={handleItemClick}
+                  />
+                );
+              })}
           </List>
         </SectionName>
       </Container>

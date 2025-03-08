@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const List = styled.li`
@@ -21,17 +20,10 @@ const DeleteBtn = styled.button`
   padding: 0;
 `;
 
-function TodoText({ id, todo, isChecked, deleteTodo, move, moveList }) {
-  const clickMove = () => {
-    move(id);
-    if (!isChecked) {
-      moveList(id);
-    }
-  };
-
+function TodoText({ id, todo, isChecked, deleteTodo, move }) {
   return (
     <List>
-      <Item onClick={clickMove}>{todo}</Item>
+      <Item onClick={move(id)}>{todo}</Item>
       <DeleteBtn onClick={deleteTodo(id)}>❎</DeleteBtn>
     </List>
   );
